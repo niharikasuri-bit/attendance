@@ -11,7 +11,15 @@ const LAST_STEP = 1;
 const PER_USER = "Different date for each user";
 
 const ENROLLMENT_OPTIONS = [
-  { label: PER_USER, text: "Add an enrollment date for each user in the generated template." },
+  {
+    label: PER_USER,
+    text: (
+      <>
+        Set an enrollment date for every user in all three tabs of the generated template: <strong className="font-semibold">Frontline Workers</strong>,{" "}
+        <strong className="font-semibold">Attendance Markers</strong> and <strong className="font-semibold">Attendance Approvers</strong>.
+      </>
+    ),
+  },
   { label: "Same date for all users", text: "Choose one enrollment date that applies to everyone." },
 ];
 
