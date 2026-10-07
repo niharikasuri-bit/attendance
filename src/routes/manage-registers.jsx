@@ -27,7 +27,6 @@ const STATUS_OPTIONS = [
 ];
 
 const plural = (n, word) => `${n} ${n === 1 ? word : `${word}s`}`;
-const formatDate = (iso) => new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 const frequencyLabel = (f) => (f === "Once" || f === "Twice" ? `${f} a day` : f);
 /** Boundary levels used by any register, in first-seen order. */
 const boundaryLevels = (registers) => [...new Set(registers.flatMap((r) => r.boundary.split(",").map((b) => b.trim()).filter(Boolean)))];
@@ -90,6 +89,8 @@ export default function ManageRegisters() {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const filtersActive = Object.values(applied).some((v) => v.trim());
+  // Clear and Search only do something once a filter has been entered (or one is still applied).
+  const canFilter = filtersActive || Object.values(draft).some((v) => v.trim());
   const search = () => setApplied({ ...draft, query: draft.query.trim() });
   const clearFilters = () => {
     setDraft(NO_FILTERS);
@@ -211,10 +212,19 @@ export default function ManageRegisters() {
           />
           <SelectFilter label="Mapping status" value={draft.status} onChange={setField("status")} options={STATUS_OPTIONS} allLabel="All registers" />
           <div className="ml-auto flex items-center gap-4">
-            <button type="button" onClick={clearFilters} className="text-sm font-medium text-primary hover:underline">
+            <button
+              type="button"
+              onClick={clearFilters}
+              disabled={!canFilter}
+              className="text-sm font-medium text-primary hover:underline disabled:cursor-not-allowed disabled:text-muted-foreground disabled:no-underline"
+            >
               Clear
             </button>
-            <button type="submit" className={primaryButton}>
+            <button
+              type="submit"
+              disabled={!canFilter}
+              className={`${primaryButton} disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:brightness-100`}
+            >
               <Search className="size-4" /> Search
             </button>
           </div>
@@ -299,7 +309,7 @@ export default function ManageRegisters() {
                   <th className="px-4 py-3 text-right">Active users</th>
                   <th className="px-4 py-3">Attendance frequency</th>
                   <th className="px-4 py-3">Attendance officer</th>
-                  <th className="px-4 py-3">Created on</th>
+                  <th className="px-4 py-3">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -332,7 +342,14 @@ export default function ManageRegisters() {
                       <td className="px-4 py-3 text-right text-sm tabular-nums text-foreground">{r.active}</td>
                       <td className="px-4 py-3 text-sm text-foreground">{frequencyLabel(r.frequency)}</td>
                       <td className="px-4 py-3 text-sm text-foreground">{r.officer || <span className="text-muted-foreground">Not assigned</span>}</td>
-                      <td className="whitespace-nowrap px-4 py-3 text-sm text-foreground">{formatDate(r.createdAt)}</td>
+                      <td className="px-4 py-3">
+                        {/* A register is active while it has active users to mark attendance for. */}
+                        {r.active > 0 ? (
+                          <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800">Active</span>
+                        ) : (
+                          <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">Inactive</span>
+                        )}
+                      </td>
                     </tr>
                   );
                 })}
