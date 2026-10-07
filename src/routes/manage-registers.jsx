@@ -223,7 +223,7 @@ export default function ManageRegisters() {
             <button
               type="submit"
               disabled={!canFilter}
-              className={`${primaryButton} disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:brightness-100`}
+              className={`${primaryButton} disabled:cursor-not-allowed disabled:bg-border disabled:text-muted-foreground disabled:hover:brightness-100`}
             >
               <Search className="size-4" /> Search
             </button>
