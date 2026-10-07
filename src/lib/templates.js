@@ -77,7 +77,7 @@ function registerInstructions({ levels, frequency, sessions }) {
     ...(chosen.length ? ["", "Your selections:", ...chosen.map((c) => `• ${c}`)] : []),
     "",
     "1. Fill at least one boundary column for each row",
-    "2. The Register ID is auto-generated from the deepest boundary selected. You can edit it if needed.",
+    "2. Each register gets a new Register ID (BILL followed by 8 digits). You can edit it if needed.",
     "3. Ensure all Register IDs are unique",
     `4. Sessions is pre-filled with ${sessions} for every register. Change it per row if a register needs a different number.`,
     "5. Upload the completed file back to the system",
@@ -89,9 +89,9 @@ function registerInstructions({ levels, frequency, sessions }) {
 const SAMPLE_BOUNDARY_PATH = ["Nigeria", "Plateau", "Kanam", "Dengi", "pl Dengi Primary Health Centre"];
 
 const SAMPLE_VILLAGES = [
-  { village: "ANGWAN GARKUWA", code: "NIGERIA_NI_09_14_18_01_64_ANGWAN_GARKUWA", registerId: "Angwan" },
-  { village: "MAKABARTA A com 01", code: "NIGERIA_NI_09_14_18_01_63_MAKABARTA_A_COM_01", registerId: "Makabarta" },
-  { village: "GENERAL HOSPITAL AREA", code: "NIGERIA_NI_09_14_18_01_62_GENERAL_HOSPITAL_AREA", registerId: "General Hospital" },
+  { village: "ANGWAN GARKUWA", code: "NIGERIA_NI_09_14_18_01_64_ANGWAN_GARKUWA" },
+  { village: "MAKABARTA A com 01", code: "NIGERIA_NI_09_14_18_01_63_MAKABARTA_A_COM_01" },
+  { village: "GENERAL HOSPITAL AREA", code: "NIGERIA_NI_09_14_18_01_62_GENERAL_HOSPITAL_AREA" },
 ];
 
 const SAMPLE_NAMES = [
@@ -250,9 +250,18 @@ export const REGISTER_COLUMN_GROUPS = [
 ];
 
 
+// Fresh Register IDs ("BILL 16273678", ...) following the highest one in use, so a generated
+// template always creates new registers (with no users) instead of matching existing ones.
+function nextRegisterIds(count) {
+  const numbers = getRegisters(getState()).map((r) => Number(/^BILL (\d{8})$/.exec(r.name)?.[1]) || 0);
+  const start = Math.max(16273672, ...numbers) + 1;
+  return Array.from({ length: count }, (_, i) => `BILL ${start + i}`);
+}
+
 export function buildRegisterTemplate() {
   const { templateLevels, templateFrequency } = getState();
   const sessions = sessionsPerDay(templateFrequency);
+  const registerIds = nextRegisterIds(SAMPLE_VILLAGES.length);
   return {
     fileName: "Attendance_Register_Template.xlsx",
     audit: {
@@ -269,7 +278,7 @@ export function buildRegisterTemplate() {
       {
         name: "Attendance Registers",
         columns: REGISTER_COLUMNS,
-        rows: SAMPLE_VILLAGES.map((v) => [...SAMPLE_BOUNDARY_PATH, v.village, v.code, v.registerId, sessions]),
+        rows: SAMPLE_VILLAGES.map((v, i) => [...SAMPLE_BOUNDARY_PATH, v.village, v.code, registerIds[i], sessions]),
         lists: [{ columns: ["NIGERIA_COUNTRY"], options: ["Nigeria"] }],
       },
       {
