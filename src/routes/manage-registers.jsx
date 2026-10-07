@@ -22,8 +22,8 @@ const PAGE_SIZES = [10, 20, 50];
 const NO_FILTERS = { query: "", level: "", frequency: "", officer: "", status: "" };
 
 const STATUS_OPTIONS = [
-  { value: "unmapped", label: "No users yet" },
-  { value: "mapped", label: "Has users" },
+  { value: "mapped", label: "Users mapped" },
+  { value: "unmapped", label: "No users mapped" },
 ];
 
 const plural = (n, word) => `${n} ${n === 1 ? word : `${word}s`}`;
@@ -165,7 +165,7 @@ export default function ManageRegisters() {
         </div>
 
         <div className="mt-4 inline-flex flex-wrap divide-x divide-border rounded-lg border border-border bg-card">
-          <Stat label="Registers" value={registers.length} />
+          <Stat label="Total Registers" value={registers.length} />
           <Stat label="Users mapped" value={totalUsers} />
           <Stat label="Registers without users" value={withoutUsers} tone={withoutUsers ? "warn" : undefined} />
         </div>
@@ -210,7 +210,7 @@ export default function ManageRegisters() {
             options={[...new Set(registers.map((r) => r.officer).filter(Boolean))]}
             allLabel="All officers"
           />
-          <SelectFilter label="Mapping status" value={draft.status} onChange={setField("status")} options={STATUS_OPTIONS} allLabel="All registers" />
+          <SelectFilter label="User mapping status" value={draft.status} onChange={setField("status")} options={STATUS_OPTIONS} allLabel="All statuses" />
           <div className="ml-auto flex items-center gap-4">
             <button
               type="button"
