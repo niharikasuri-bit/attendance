@@ -67,6 +67,7 @@ export function SheetTable({ sheet, toneFor, minRows = MIN_PREVIEW_ROWS }) {
               } ${c.wrap ? "whitespace-pre-wrap font-normal leading-relaxed" : "whitespace-nowrap"}`}
             >
               {c.label}
+              {c.format && <span className="font-normal text-muted-foreground"> ({c.format})</span>}
               {c.tone && <span className="sr-only"> ({COLUMN_TONES[c.tone].label})</span>}
             </th>
           ))}

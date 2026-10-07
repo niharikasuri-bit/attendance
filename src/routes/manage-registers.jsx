@@ -303,8 +303,8 @@ export default function ManageRegisters() {
                       <Checkbox checked={allPageSelected} indeterminate={pageSelected > 0 && !allPageSelected} />
                     </button>
                   </th>
-                  <th className="px-4 py-3">Register ID</th>
-                  <th className="min-w-[220px] px-4 py-3">Boundary level</th>
+                  <th className="min-w-[200px] px-4 py-3">Register ID</th>
+                  <th className="w-[180px] px-4 py-3">Boundary level</th>
                   <th className="px-4 py-3 text-right">Total users</th>
                   <th className="px-4 py-3 text-right">Active users</th>
                   <th className="px-4 py-3">Attendance frequency</th>
@@ -332,12 +332,12 @@ export default function ManageRegisters() {
                           <Checkbox checked={checked} />
                         </button>
                       </td>
-                      <td className="px-4 py-3 text-sm font-medium">
+                      <td className="whitespace-nowrap px-4 py-3 text-sm font-medium">
                         <Link to={`/attendance/registers/${r.id}?from=manage`} className="text-primary underline">
                           {r.name}
                         </Link>
                       </td>
-                      <td className="px-4 py-3 text-sm text-foreground">{r.boundary}</td>
+                      <td className="max-w-[180px] whitespace-normal break-words px-4 py-3 text-sm text-foreground">{r.boundary}</td>
                       <td className="px-4 py-3 text-right text-sm tabular-nums text-foreground">{r.users}</td>
                       <td className="px-4 py-3 text-right text-sm tabular-nums text-foreground">{r.active}</td>
                       <td className="px-4 py-3 text-sm text-foreground">{frequencyLabel(r.frequency)}</td>

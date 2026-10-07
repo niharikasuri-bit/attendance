@@ -53,6 +53,7 @@ export default function CustomizeTemplate() {
   // Registers already exist for every boundary level, so picking all of them can't create new ones.
   const [existsAlertOpen, setExistsAlertOpen] = useState(false);
 
+
   const next = () => {
     // First-time users haven't uploaded any registers yet, so nothing can already exist for them.
     if (step === 0) return allSelected && hasGeneratedRegisters() ? setExistsAlertOpen(true) : setStep(1);
@@ -173,7 +174,7 @@ export default function CustomizeTemplate() {
         </button>
       </FlowFooter>
       <Dialog open={existsAlertOpen} onOpenChange={setExistsAlertOpen}>
-        <DialogContent className="max-w-xl gap-0 bg-white px-10 pb-8 pt-10 text-center sm:rounded-lg">
+        <DialogContent className="max-w-[40rem] gap-0 bg-white px-10 pb-8 pt-10 text-center sm:rounded-lg">
           <svg viewBox="0 0 24 24" className="mx-auto size-14" aria-hidden="true">
             <path d="M12 2.5 22.5 21h-21L12 2.5Z" fill="#B91900" />
             <path d="M12 9v5.5" stroke="white" strokeWidth="2.2" strokeLinecap="square" />
@@ -188,8 +189,8 @@ export default function CustomizeTemplate() {
                 .join(", ")}{" "}
               and {BOUNDARY_LEVELS[BOUNDARY_LEVELS.length - 1].label}
             </strong>{" "}
-            boundary levels. You can continue to create a new register, or go to <strong className="font-semibold">Manage Registers</strong> to edit or
-            delete the existing one.
+            boundary levels. To view or edit the existing register, go to <strong className="font-semibold">Manage Registers</strong>. You can also
+            continue to create a new register; it will be generated with a <strong className="font-semibold">new Register ID</strong>.
           </DialogDescription>
           <div className="mt-6 grid grid-cols-2 gap-3">
             <button
@@ -205,7 +206,7 @@ export default function CustomizeTemplate() {
               }}
               className="rounded-md bg-primary px-4 py-3 text-base font-medium text-primary-foreground transition-colors hover:brightness-95"
             >
-              Continue
+              Continue Creating New Register
             </button>
           </div>
         </DialogContent>

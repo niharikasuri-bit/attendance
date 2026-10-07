@@ -28,7 +28,8 @@ export function TemplateReview({ crumb, templateName, workbook, guide, groups, b
     const info = group ?? guide[label] ?? {};
     const required = group?.requiredColumns ? group.requiredColumns.includes(column.label) : !!info.required;
     const tone = prefilled.includes(label) ? "auto" : required ? "required" : "optional";
-    return { tone, help: tone === "auto" ? "Filled in from your selections." : info.help };
+    const format = column.label === "Register ID" ? "BILL XXXXXXXX" : undefined;
+    return { tone, format, help: tone === "auto" ? "Filled in from your selections." : info.help };
   };
 
   // Which colours appear on the sheet being shown (the legend lists only those).
