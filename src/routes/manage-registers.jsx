@@ -305,7 +305,7 @@ export default function ManageRegisters() {
                   </th>
                   <th className="px-4 py-3">Register ID</th>
                   <th className="min-w-[220px] px-4 py-3">Boundary level</th>
-                  <th className="px-4 py-3 text-right">Users</th>
+                  <th className="px-4 py-3 text-right">Total users</th>
                   <th className="px-4 py-3 text-right">Active users</th>
                   <th className="px-4 py-3">Attendance frequency</th>
                   <th className="px-4 py-3">Attendance officer</th>
