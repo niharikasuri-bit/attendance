@@ -188,11 +188,11 @@ export default function MapTemplate() {
     return ids.length ? ids : newIds;
   });
 
-  // Registers with users already have enrollment dates, so they can't be picked again —
-  // except one the user explicitly came here to map (e.g. from View Register). First-time
-  // users (who haven't mapped anyone yet) see every register and no notice.
+  // Every register on Manage Registers is listed, except the few that already have enrollment
+  // dates set — unless the user explicitly came here to map one (e.g. from View Register).
+  // First-time users (who haven't mapped anyone yet) see every register and no notice.
   const firstTimeMapping = store.users.length === 0;
-  const selectable = firstTimeMapping ? registers : registers.filter((r) => r.users === 0 || selected.includes(r.id));
+  const selectable = firstTimeMapping ? registers : registers.filter((r) => !r.enrollmentSet || selected.includes(r.id));
   const hiddenCount = registers.length - selectable.length;
   const [noticeOpen, setNoticeOpen] = useState(true);
 

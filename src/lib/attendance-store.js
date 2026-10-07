@@ -5,8 +5,8 @@ export const SEED_REGISTERS = [
   { id: "r-1", createdAt: "2025-08-18T11:32:00+05:30", name: "BILL 16273673", users: 0, boundary: "State, LGA, Ward, Settlement", frequency: "Once", officer: "Anita Sharma" },
   { id: "r-2", createdAt: "2025-08-18T11:33:00+05:30", name: "BILL 16273674", users: 0, boundary: "State, LGA, Ward", frequency: "Twice", officer: "Rahul Verma" },
   { id: "r-3", createdAt: "2025-08-18T11:34:00+05:30", name: "BILL 16273675", users: 0, boundary: "State, LGA", frequency: "Once", officer: "Anita Sharma" },
-  { id: "r-4", createdAt: "2025-08-18T11:35:00+05:30", name: "BILL 16273676", users: 12, active: 10, boundary: "State, LGA, Ward", frequency: "Twice", officer: "Meera Iyer" },
-  { id: "r-5", createdAt: "2025-08-18T11:36:00+05:30", name: "BILL 16273677", users: 43, active: 40, boundary: "State, LGA, Ward, Settlement", frequency: "Once", officer: "Rahul Verma" },
+  { id: "r-4", createdAt: "2025-08-18T11:35:00+05:30", name: "BILL 16273676", users: 12, active: 10, enrollmentSet: true, boundary: "State, LGA, Ward", frequency: "Twice", officer: "Meera Iyer" },
+  { id: "r-5", createdAt: "2025-08-18T11:36:00+05:30", name: "BILL 16273677", users: 43, active: 40, enrollmentSet: true, boundary: "State, LGA, Ward, Settlement", frequency: "Once", officer: "Rahul Verma" },
 ];
 
 const CURRENT_USER = { name: "Aisha Bello", role: "Campaign Supervisor" };

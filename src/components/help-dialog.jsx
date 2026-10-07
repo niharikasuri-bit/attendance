@@ -97,8 +97,8 @@ export function HelpDialog({ open, onOpenChange }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[85vh] max-w-2xl flex-col gap-0 overflow-hidden bg-white p-0">
         <div className="border-b border-border px-6 pb-4 pt-6 pr-14">
-          <DialogTitle className="text-xl font-bold text-heading">Understanding attendance registers</DialogTitle>
-          <DialogDescription className="mt-1 text-sm text-muted-foreground">Short answers to the questions people ask most.</DialogDescription>
+          <DialogTitle className="text-xl font-bold text-heading">How can we help?</DialogTitle>
+          <DialogDescription className="mt-1 text-sm text-muted-foreground">Quick answers to common questions about attendance registers.</DialogDescription>
           <div className="relative mt-4">
             <Search className="pointer-events-none absolute left-3 top-2.5 size-4 text-muted-foreground" />
             <input
