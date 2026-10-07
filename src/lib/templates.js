@@ -343,7 +343,7 @@ export const USER_COLUMN_GUIDE = {
   "Register ID": { required: true, help: "Must match one of your selected registers." },
   "Enrollment Date": { required: true, help: "Date the user joins (dd/mm/yyyy)." },
   "De-enrollment Date": { required: false, help: "Date the user leaves. Blank if none." },
-  "Team Code": { required: true, help: "Same code means same team." },
+  "Team Code": { required: false, help: "Optional. Users with the same code are in the same team." },
 };
 
 // Columns collapsed into a single guide row.

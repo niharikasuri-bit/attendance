@@ -4,7 +4,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { AppShell, Breadcrumb, FlowFooter } from "@/components/app-shell";
 import { Checkbox, RadioDot, backButtonClass, primaryButtonClass } from "@/components/flow-controls";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { attendanceActions, getRegisters, getState } from "@/lib/attendance-store";
+import { attendanceActions, getState } from "@/lib/attendance-store";
 import { hasGeneratedRegisters } from "./attendance-home";
 
 export const BOUNDARY_LEVELS = [
@@ -52,11 +52,6 @@ export default function CustomizeTemplate() {
 
   // Registers already exist for every boundary level, so picking all of them can't create new ones.
   const [existsAlertOpen, setExistsAlertOpen] = useState(false);
-  const allLevels = BOUNDARY_LEVELS.map((l) => l.label);
-  // Only one register can cover a given set of boundaries.
-  const shown = existsAlertOpen
-    ? getRegisters(getState()).find((r) => allLevels.every((level) => r.boundary.split(",").some((b) => b.trim() === level)))
-    : null;
 
   const next = () => {
     // First-time users haven't uploaded any registers yet, so nothing can already exist for them.
@@ -186,31 +181,16 @@ export default function CustomizeTemplate() {
           </svg>
           <DialogTitle className="mt-4 text-2xl font-bold leading-tight text-heading">Registers already exist for these boundaries</DialogTitle>
           <DialogDescription className="mt-3 text-base leading-relaxed text-foreground">
-            Attendance registers have already been created for the selected boundaries. You can edit the existing register, or delete it in{" "}
+            Attendance registers have already been created for{" "}
+            <strong className="font-semibold">
+              {BOUNDARY_LEVELS.slice(0, -1)
+                .map((l) => l.label)
+                .join(", ")}{" "}
+              and {BOUNDARY_LEVELS[BOUNDARY_LEVELS.length - 1].label}
+            </strong>
+            . You can edit the existing register, or delete it in{" "}
             <strong className="font-semibold">Manage Registers</strong> if you want to create a new one.
           </DialogDescription>
-          {shown && (
-            <>
-              <section className="mt-5 rounded-md bg-info-bg px-4 pt-3 text-left text-sm" aria-labelledby="existing-register-title">
-                <h3 id="existing-register-title" className="font-semibold text-black">
-                  Existing register details
-                </h3>
-                <dl className="mt-1 divide-y divide-border">
-                  {[
-                    ["Register ID", shown.name],
-                    ["Boundaries", shown.boundary],
-                    ["Users", shown.users],
-                    ["Session frequency", `${shown.frequency} a day`],
-                  ].map(([label, value]) => (
-                    <div key={label} className="grid grid-cols-[9.5rem_minmax(0,1fr)] items-baseline gap-4 py-2.5">
-                      <dt className="font-semibold text-heading">{label}</dt>
-                      <dd className="text-foreground">{value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </section>
-            </>
-          )}
           <button
             onClick={() => navigate("/attendance/registers")}
             className="mt-6 w-full rounded-md bg-primary px-4 py-3 text-base font-medium text-primary-foreground transition-colors hover:brightness-95"
