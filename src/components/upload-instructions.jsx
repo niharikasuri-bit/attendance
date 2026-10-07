@@ -26,7 +26,7 @@ function PreviewNote({ title, text }) {
 // Header colours for colour-coded column types (see SheetTable `toneFor`).
 export const COLUMN_TONES = {
   auto: { label: "Auto-filled", header: "bg-green-50 text-green-900", bar: "var(--color-green-600)", swatch: "bg-green-600" },
-  required: { label: "Required", header: "bg-amber-50 text-amber-900", bar: "var(--color-amber-500)", swatch: "bg-amber-500" },
+  required: { label: "Required to be filled", header: "bg-amber-50 text-amber-900", bar: "var(--color-amber-500)", swatch: "bg-amber-500" },
   optional: { label: "Optional", header: "bg-muted text-muted-foreground", bar: "var(--color-gray-300)", swatch: "bg-gray-300" },
 };
 
