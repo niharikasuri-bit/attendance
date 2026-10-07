@@ -15,7 +15,7 @@ const ENROLLMENT_OPTIONS = [
     label: PER_USER,
     text: (
       <>
-        Set an enrollment date for every user in all three tabs of the generated template: <strong className="font-semibold">Frontline Workers</strong>,{" "}
+        Set an enrollment date for every user on each tab of the generated template: <strong className="font-semibold">Frontline Workers</strong>,{" "}
         <strong className="font-semibold">Attendance Markers</strong> and <strong className="font-semibold">Attendance Approvers</strong>.
       </>
     ),
