@@ -179,24 +179,35 @@ export default function CustomizeTemplate() {
             <path d="M12 9v5.5" stroke="white" strokeWidth="2.2" strokeLinecap="square" />
             <path d="M12 17.2v1.4" stroke="white" strokeWidth="2.2" strokeLinecap="square" />
           </svg>
-          <DialogTitle className="mt-4 text-2xl font-bold leading-tight text-heading">Registers already exist for these boundaries</DialogTitle>
+          <DialogTitle className="mt-4 text-2xl font-bold leading-tight text-heading">Registers already exist for these boundary levels</DialogTitle>
           <DialogDescription className="mt-3 text-base leading-relaxed text-foreground">
-            Attendance registers have already been created for{" "}
+            Attendance registers have already been created for the{" "}
             <strong className="font-semibold">
               {BOUNDARY_LEVELS.slice(0, -1)
                 .map((l) => l.label)
                 .join(", ")}{" "}
               and {BOUNDARY_LEVELS[BOUNDARY_LEVELS.length - 1].label}
-            </strong>
-            . You can edit the existing register, or delete it in{" "}
-            <strong className="font-semibold">Manage Registers</strong> if you want to create a new one.
+            </strong>{" "}
+            boundary levels. You can continue to create a new register, or go to <strong className="font-semibold">Manage Registers</strong> to edit or
+            delete the existing one.
           </DialogDescription>
-          <button
-            onClick={() => navigate("/attendance/registers")}
-            className="mt-6 w-full rounded-md bg-primary px-4 py-3 text-base font-medium text-primary-foreground transition-colors hover:brightness-95"
-          >
-            Go to Manage Registers
-          </button>
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            <button
+              onClick={() => navigate("/attendance/registers")}
+              className="rounded-md border border-primary bg-white px-4 py-3 text-base font-medium text-primary transition-colors hover:bg-primary/5"
+            >
+              Go to Manage Registers
+            </button>
+            <button
+              onClick={() => {
+                setExistsAlertOpen(false);
+                setStep(1);
+              }}
+              className="rounded-md bg-primary px-4 py-3 text-base font-medium text-primary-foreground transition-colors hover:brightness-95"
+            >
+              Continue
+            </button>
+          </div>
         </DialogContent>
       </Dialog>
     </AppShell>
