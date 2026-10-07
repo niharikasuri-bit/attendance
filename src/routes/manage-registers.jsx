@@ -148,12 +148,12 @@ export default function ManageRegisters() {
       <main className="min-w-0 flex-1 bg-muted/40 px-6 pb-12 pt-4">
         <Breadcrumb items={[{ label: "Home", to: "/" }, { label: "Manage Registers" }]} />
 
-        <div className="mt-3 flex flex-wrap items-start justify-between gap-4">
-          <div>
+        <div className="mt-3 flex items-start justify-between gap-6">
+          <div className="min-w-0 flex-1">
             <h1 className="font-condensed text-3xl font-bold text-heading">Manage Registers</h1>
             <p className="mt-1 text-sm text-muted-foreground">All the attendance registers you've generated for this campaign are here. Find a register, open it to see its users and attendance, or download and delete registers.</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-3">
             <Link to="/attendance/map-template" className={outlineButton}>
               <Users className="size-4" /> Map Users to Registers
             </Link>
