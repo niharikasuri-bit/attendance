@@ -69,7 +69,7 @@ function SelectFilter({ label, value, onChange, options, allLabel }) {
 function Stat({ label, value, tone }) {
   return (
     <div className="flex items-baseline gap-2 px-5 py-2.5">
-      <span className={`text-xl font-bold tabular-nums ${tone === "error" ? "text-[#B91900]" : tone === "warn" ? "text-amber-700" : "text-heading"}`}>{value}</span>
+      <span className={`text-xl font-bold tabular-nums ${tone === "error" ? "text-[#B91900]" : "text-heading"}`}>{value}</span>
       <span className="text-sm text-muted-foreground">{label}</span>
     </div>
   );
@@ -169,7 +169,7 @@ export default function ManageRegisters() {
           <Stat label="Total Registers" value={registers.length} />
           <Stat label="Users mapped" value={totalUsers} />
           <Stat label="Registers without users" value={withoutUsers} tone={withoutUsers ? "error" : undefined} />
-          <Stat label="Users left to be mapped" value={usersLeft} tone={usersLeft ? "warn" : undefined} />
+          <Stat label="Users left to be mapped" value={usersLeft} tone={usersLeft ? "error" : undefined} />
         </div>
 
         <form
