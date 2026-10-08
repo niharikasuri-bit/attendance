@@ -9,7 +9,10 @@ export const SEED_REGISTERS = [
   { id: "r-5", createdAt: "2025-08-18T11:36:00+05:30", name: "BILL 16273677", users: 43, active: 40, enrollmentSet: true, boundary: "State, LGA, Ward, Settlement", frequency: "Once", officer: "Rahul Verma" },
 ];
 
-const CURRENT_USER = { name: "Aisha Bello", role: "Campaign Supervisor" };
+/** Users available to this campaign; anyone not yet on a register is still left to be mapped. */
+export const TOTAL_CAMPAIGN_USERS = 120;
+
+const CURRENT_USER ={ name: "Aisha Bello", role: "Campaign Supervisor" };
 const STORAGE_KEY = "attendancePrototypeData";
 
 const EMPTY = {

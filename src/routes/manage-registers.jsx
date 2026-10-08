@@ -15,7 +15,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { attendanceActions, getRegisters, useAttendanceStore } from "@/lib/attendance-store";
+import { attendanceActions, getRegisters, TOTAL_CAMPAIGN_USERS, useAttendanceStore } from "@/lib/attendance-store";
 import { downloadRegisters } from "@/lib/templates";
 
 const PAGE_SIZES = [10, 20, 50];
@@ -143,6 +143,7 @@ export default function ManageRegisters() {
 
   const totalUsers = registers.reduce((n, r) => n + r.users, 0);
   const withoutUsers = registers.filter((r) => r.users === 0).length;
+  const usersLeft = Math.max(0, TOTAL_CAMPAIGN_USERS - totalUsers);
 
   return (
     <AppShell>
@@ -168,6 +169,7 @@ export default function ManageRegisters() {
           <Stat label="Total Registers" value={registers.length} />
           <Stat label="Users mapped" value={totalUsers} />
           <Stat label="Registers without users" value={withoutUsers} tone={withoutUsers ? "warn" : undefined} />
+          <Stat label="Users left to be mapped" value={usersLeft} tone={usersLeft ? "warn" : undefined} />
         </div>
 
         <form
