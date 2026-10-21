@@ -55,9 +55,17 @@ export default function UploadMapping() {
             </h2>
           </div>
         ),
-        message: (
+        message: (result) => (
           <>
-            The populated user mapping template you uploaded has been added successfully. Download a copy now, and manage it anytime from <strong className="font-semibold">Manage Registers</strong>.
+            The populated user mapping template you uploaded has been added successfully
+            {result && (
+              <>
+                {" "}
+                and <strong className="font-semibold">{plural(result.users, "user")}</strong> mapped to{" "}
+                <strong className="font-semibold">{plural(result.registers, "register")}</strong>
+              </>
+            )}
+            . Download a copy now, and manage it anytime from <strong className="font-semibold">Manage Registers</strong>.
           </>
         ),
       }}

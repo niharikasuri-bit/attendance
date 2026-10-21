@@ -173,7 +173,7 @@ export function TemplateUploadPage({
             <div className={success.cardClass}>
               {typeof success.header === "function" ? success.header(result) : success.header}
               <div className="border-t border-border p-6">
-                <p className="text-base leading-relaxed text-foreground">{success.message}</p>
+                <p className="text-base leading-relaxed text-foreground">{typeof success.message === "function" ? success.message(result) : success.message}</p>
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-muted/30 px-2 py-1.5">
                   <div className="flex min-w-0 items-center gap-3">
                     <FileBadge />
