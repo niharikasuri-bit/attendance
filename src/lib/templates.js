@@ -511,6 +511,7 @@ export async function uploadUserMappingTemplate(file) {
       ].join(", ")}`,
     })),
   );
+  return { users: users.length, registers: byRegister.size };
 }
 
 /* ---------- Simple single-sheet exports ---------- */

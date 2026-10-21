@@ -57,6 +57,7 @@ export function TemplateUploadPage({
   const [file, setFile] = useState(null);
   const [dragging, setDragging] = useState(false);
   const [done, setDone] = useState(false);
+  const [result, setResult] = useState(null);
   const [modalOpen, setModalOpen] = useState(true);
   const [error, setError] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -84,7 +85,7 @@ export function TemplateUploadPage({
   }, [file]);
 
   const finishUpload = async (f) => {
-    await upload(f);
+    setResult(await upload(f));
     setDone(true);
     onUploaded?.();
   };
@@ -170,7 +171,7 @@ export function TemplateUploadPage({
 
           {done ? (
             <div className={success.cardClass}>
-              {success.header}
+              {typeof success.header === "function" ? success.header(result) : success.header}
               <div className="border-t border-border p-6">
                 <p className="text-base leading-relaxed text-foreground">{success.message}</p>
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-muted/30 px-2 py-1.5">
