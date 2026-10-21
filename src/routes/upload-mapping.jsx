@@ -48,12 +48,11 @@ export default function UploadMapping() {
         header: (result) => (
           <div className="bg-green-700 px-8 py-16 text-center">
             <CircleCheck className="mx-auto size-12 text-white" strokeWidth={1.5} />
-            <h2 className="mt-4 font-condensed text-3xl font-bold text-white">Users Mapped Successfully!</h2>
-            {result && (
-              <p className="mt-2 text-lg text-white">
-                {plural(result.users, "user")} mapped to {plural(result.registers, "register")}
-              </p>
-            )}
+            <h2 className="mt-4 font-condensed text-3xl font-bold text-white">
+              {result
+                ? `${plural(result.users, "User")} Mapped to ${plural(result.registers, "Register")} Successfully!`
+                : "Users Mapped Successfully!"}
+            </h2>
           </div>
         ),
         message: (
