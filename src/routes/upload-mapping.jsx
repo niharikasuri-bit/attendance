@@ -61,8 +61,7 @@ export default function UploadMapping() {
             {result && (
               <>
                 {" "}
-                and <strong className="font-semibold">{plural(result.users, "user")}</strong> mapped to{" "}
-                <strong className="font-semibold">{plural(result.registers, "register")}</strong>
+                and {plural(result.users, "user")} mapped to {plural(result.registers, "register")}
               </>
             )}
             . Download a copy now, and manage it anytime from <strong className="font-semibold">Manage Registers</strong>.
