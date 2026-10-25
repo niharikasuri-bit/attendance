@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ChevronDown, ChevronUp, CirclePlay, FileText, LayoutGrid, Lightbulb, MessageCircleQuestion, Search, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, ChevronUp, CirclePlay, FileText, LayoutGrid, MessageCircleQuestion, Search, SlidersHorizontal, X } from "lucide-react";
 import { AppShell, Breadcrumb } from "@/components/app-shell";
 import { HelpArt } from "@/components/help-panel";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -8,7 +8,7 @@ import { DOCS, FAQS, TOPICS, TUTORIALS, topicLabel } from "@/lib/help-content";
 
 /**
  * The Help Center. A header with the illustration, then search and a Filters button that opens advanced
- * filters (topic, words in it, words in its name, popular only). The type of resource (All, Documents,
+ * filters (topic, words in it, words in its name). The type of resource (All, Documents,
  * Videos, FAQs) sits below with counts. Documents and videos are equal cards; questions open in place.
  */
 const RES = [
@@ -17,12 +17,12 @@ const RES = [
   { id: "videos", label: "Videos", icon: CirclePlay },
   { id: "faq", label: "FAQs", icon: MessageCircleQuestion },
 ];
-const NO_FILTERS = { topic: "all", words: "", name: "", popular: false };
+const NO_FILTERS = { topic: "all", words: "", name: "" };
 
 const ITEMS = [
   ...DOCS.map((d) => ({ id: d.id, res: "documents", title: d.title, sub: d.desc, topic: d.topic, type: "Document", format: d.format })),
   ...TUTORIALS.map((t) => ({ id: t.id, res: "videos", title: t.title, sub: t.desc, topic: t.topic, type: "Video", length: t.length, popular: t.popular })),
-  ...FAQS.map((f) => ({ id: f.id, res: "faq", title: f.q, sub: "", answer: f.a, like: f.like, topic: f.topic, type: "Question" })),
+  ...FAQS.map((f) => ({ id: f.id, res: "faq", title: f.q, sub: "", answer: f.a, topic: f.topic, type: "Question" })),
 ];
 
 const has = (hay, text) =>
@@ -61,8 +61,7 @@ export default function HelpCenter() {
       has(searchText(i), q) &&
       (f.topic === "all" || i.topic === f.topic) &&
       has(`${i.title} ${i.sub} ${i.answer ?? ""}`, f.words) &&
-      has(i.title, f.name) &&
-      (!f.popular || i.popular),
+      has(i.title, f.name),
   );
   const rows = matching.filter((i) => res === "all" || i.res === res);
   // When nothing shows, work out why: the words, the filters, or the type
@@ -77,7 +76,6 @@ export default function HelpCenter() {
     ...(f.topic !== "all" ? [{ key: "topic", label: `Topic: ${topicLabel(f.topic)}` }] : []),
     ...(f.words.trim() ? [{ key: "words", label: `Has the words: ${f.words.trim()}` }] : []),
     ...(f.name.trim() ? [{ key: "name", label: `Name contains: ${f.name.trim()}` }] : []),
-    ...(f.popular ? [{ key: "popular", label: "Popular only" }] : []),
   ];
   const act = (i) => {
     if (i.res === "faq") setOpen(open === i.id ? null : i.id);
@@ -95,7 +93,7 @@ export default function HelpCenter() {
           <Breadcrumb items={crumbs} />
           <div className="flex flex-col items-center pt-2 text-center">
             <HelpArt className="mb-2 h-auto w-[210px]" />
-            <h1 className="font-condensed text-[1.75rem] font-bold text-heading">How can we help you?</h1>
+            <h1 className="font-sans text-[1.75rem] font-bold text-heading">How can we help you?</h1>
             <p className="mt-2 max-w-[560px] text-[1.0625rem] leading-normal text-muted-foreground">
               Find documents, short how-to videos and answers to common questions about setting up attendance registers.
             </p>
@@ -248,14 +246,6 @@ export default function HelpCenter() {
                           {isOpen && (
                             <div id={`${uid}-a-${i.id}`} className="bg-selected-bg px-5 pb-[18px] pt-1">
                               <p className="max-w-[75ch] text-[0.9375rem] leading-relaxed text-[#202124]">{i.answer}</p>
-                              {i.like && (
-                                <p className="mt-2.5 flex max-w-[75ch] items-start gap-1.5 rounded-md bg-info px-3 py-2 text-sm text-muted-foreground">
-                                  <Lightbulb className="mt-0.5 size-4 shrink-0 text-amber-600" aria-hidden="true" />
-                                  <span>
-                                    <span className="font-semibold text-heading">Think of it like</span> {i.like}
-                                  </span>
-                                </p>
-                              )}
                               <div className="mt-2.5 flex items-center gap-2 text-[0.8125rem] text-[#5F6368]">
                                 {rated[i.id] ? (
                                   <p role="status" className="font-bold text-[#188038]">
@@ -414,11 +404,6 @@ function FiltersDialog({ open, value, onApply, onOpenChange }) {
               Name contains
             </label>
             <input id={`${uid}-name`} value={d.name} placeholder="Part of the title" onChange={(e) => setD({ ...d, name: e.target.value })} className={field} />
-            <span className="text-[0.9375rem] font-bold">Show</span>
-            <label className="inline-flex items-center gap-2.5 text-[0.9375rem]">
-              <input type="checkbox" checked={d.popular} onChange={(e) => setD({ ...d, popular: e.target.checked })} className="size-[18px] accent-primary" />
-              Popular only
-            </label>
           </div>
           <div className="flex items-center justify-between border-t border-border px-6 py-4">
             <button type="button" onClick={() => setD(NO_FILTERS)} className="h-8 rounded-lg px-3 text-sm font-bold text-primary hover:bg-selected-bg">

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown, ChevronRight, ChevronUp, CirclePlay, FileText, Lightbulb, MessageCircleQuestion, Search, X } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronUp, CirclePlay, FileText, MessageCircleQuestion, Search, X } from "lucide-react";
 import { DOCS, FAQS, TUTORIALS, topicLabel } from "@/lib/help-content";
 
 const TOPICS = FAQS;
@@ -77,14 +77,6 @@ function QuestionList({ id, topics, openId, onToggle }) {
             {isOpen && (
               <div id={`${id}-${t.id}`} className="px-2.5 pb-3 text-sm leading-[1.55] text-foreground">
                 <p>{t.a}</p>
-                {t.like && (
-                  <p className="mt-2.5 flex items-start gap-1.5 rounded-md bg-info px-3 py-2 text-muted-foreground">
-                    <Lightbulb className="mt-0.5 size-4 shrink-0 text-amber-600" aria-hidden="true" />
-                    <span>
-                      <span className="font-semibold text-heading">Think of it like</span> {t.like}
-                    </span>
-                  </p>
-                )}
               </div>
             )}
           </li>
@@ -194,7 +186,7 @@ export function HelpPanel({ id, onClose }) {
   const suggestedIds = PAGE_TOPICS.find(([re]) => re.test(path))?.[1] ?? DEFAULT_TOPICS;
   const suggested = suggestedIds.map((s) => TOPICS.find((t) => t.id === s));
   const more = TOPICS.filter((t) => !suggestedIds.includes(t.id));
-  const hits = term ? TOPICS.filter((t) => `${t.q} ${t.a} ${t.like ?? ""}`.toLowerCase().includes(term)) : [];
+  const hits = term ? TOPICS.filter((t) => `${t.q} ${t.a}`.toLowerCase().includes(term)) : [];
   // Searching covers everything: documents, videos and the quick links too, not just questions
   const docHits = term ? DOCS.filter((d) => `${d.title} ${d.desc} ${topicLabel(d.topic)}`.toLowerCase().includes(term)) : [];
   const vidHits = term ? TUTORIALS.filter((t) => `${t.title} ${t.desc} ${topicLabel(t.topic)}`.toLowerCase().includes(term)) : [];
