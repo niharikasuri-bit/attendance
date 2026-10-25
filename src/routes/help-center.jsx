@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ChevronDown, ChevronUp, CirclePlay, FileText, Info, LayoutGrid, MessageCircleQuestion, Search, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, ChevronUp, CirclePlay, FileText, LayoutGrid, MessageCircleQuestion, Search, SlidersHorizontal, X } from "lucide-react";
 import { AppShell, Breadcrumb } from "@/components/app-shell";
 import { HelpArt } from "@/components/help-panel";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -93,8 +93,8 @@ export default function HelpCenter() {
           <Breadcrumb items={crumbs} />
           <div className="flex flex-col items-center pt-2 text-center">
             <HelpArt className="mb-2 h-auto w-[210px]" />
-            <h1 className="font-sans text-[1.75rem] font-bold text-heading">How can we help you?</h1>
-            <p className="mt-2 max-w-[560px] text-[1.0625rem] leading-normal text-muted-foreground">
+            <h1 className="font-sans text-[1.75rem] font-bold text-[#0B4B66]">How can we help you?</h1>
+            <p className="mt-2 max-w-[560px] text-[1.0625rem] leading-normal text-[#505A5F]">
               Find documents, short how-to videos and answers to common questions about setting up attendance registers.
             </p>
           </div>
@@ -123,7 +123,7 @@ export default function HelpCenter() {
                 className="h-full min-w-0 flex-1 bg-transparent text-[0.9375rem] text-foreground outline-none placeholder:text-muted-foreground"
               />
             </div>
-            <button type="button" aria-haspopup="dialog" onClick={() => setFiltersOpen(true)} className={`${secondaryBtn} h-12 shrink-0 gap-2 px-[18px] font-bold`}>
+            <button type="button" aria-haspopup="dialog" onClick={() => setFiltersOpen(true)} className={`${secondaryBtn} h-12 shrink-0 gap-2 rounded-[4px] px-[18px] text-[0.9375rem] font-bold`}>
               <SlidersHorizontal className="size-[18px]" aria-hidden="true" />
               Filters
               {chips.length > 0 && <span className="min-w-5 rounded-full bg-primary px-1.5 text-center text-xs font-bold text-white">{chips.length}</span>}
@@ -155,25 +155,30 @@ export default function HelpCenter() {
               })}
             </div>
             {/* DIGIT info tag */}
-            <p className="inline-flex items-center gap-1 rounded bg-[#DEEFFF] px-3 py-1 text-sm text-[#0057BD]" role="status">
-              <Info className="size-4" aria-hidden="true" />
+            <p className="inline-flex items-center rounded bg-[#DEEFFF] px-3 py-1 text-sm text-[#0057BD]" role="status">
               {rows.length} {rows.length === 1 ? "resource" : "resources"}
             </p>
           </div>
 
           {/* Filters set in the Filters dialog, each removable. The type and search already show above. */}
           {chips.length > 0 && (
-            <div className="mt-3.5 flex flex-wrap items-center gap-2">
+            <div className="mx-auto mt-3.5 flex max-w-[680px] flex-wrap items-center gap-2">
+              {/* DIGIT chips: grey with a divider border and a dark square remove button */}
               {chips.map((c) => (
-                <span key={c.key} className="inline-flex h-8 items-center gap-1 rounded-lg bg-selected-bg pl-3 pr-1 text-sm font-medium text-heading">
-                  {c.label}
+                <span
+                  key={c.key}
+                  role="group"
+                  aria-label={`${c.label} chip with remove button`}
+                  className="inline-flex h-10 max-w-full items-center gap-2 rounded border border-[#D6D5D4] bg-[#EEEEEE] p-2 hover:shadow-[0.125rem_0.125rem_0.25rem_0_#36363633]"
+                >
+                  <span className="truncate text-sm text-[#363636]">{c.label}</span>
                   <button
                     type="button"
                     aria-label={`Remove ${c.label}`}
                     onClick={() => setF({ ...f, [c.key]: NO_FILTERS[c.key] })}
-                    className="grid size-6 place-items-center rounded-full hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="grid size-6 shrink-0 place-items-center rounded border border-[#505A5F] bg-[#505A5F] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    <X className="size-4" aria-hidden="true" />
+                    <X className="size-5" strokeWidth={2.5} aria-hidden="true" />
                   </button>
                 </span>
               ))}
@@ -372,21 +377,21 @@ function FiltersDialog({ open, value, onApply, onOpenChange }) {
   useEffect(() => {
     if (open) setD(value);
   }, [open, value]);
-  const field = "h-11 rounded-lg border border-input bg-white px-3.5 text-base text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary";
+  const field = "h-11 rounded-lg border border-[#505A5F] bg-white px-3.5 text-base text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[640px] gap-0 bg-white p-0">
+      <DialogContent className="max-w-[640px] gap-0 overflow-hidden bg-white p-0 sm:rounded-2xl">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             onApply(d);
           }}
         >
-          <div className="border-b border-border px-6 py-4 pr-14">
-            <DialogTitle className="text-xl font-bold text-heading">Filters</DialogTitle>
+          <div className="px-7 pb-2 pt-6 pr-14">
+            <DialogTitle className="text-2xl font-bold text-[#0B4B66]">Filters</DialogTitle>
           </div>
-          <div className="grid grid-cols-[160px_minmax(0,1fr)] items-center gap-x-5 gap-y-4 px-6 py-5 max-sm:grid-cols-1">
+          <div className="grid grid-cols-[160px_minmax(0,1fr)] items-center gap-x-5 gap-y-4 px-7 py-5 text-[#363636] max-sm:grid-cols-1">
             <label htmlFor={`${uid}-topic`} className="text-[0.9375rem] font-bold">
               Topic
             </label>
@@ -407,11 +412,11 @@ function FiltersDialog({ open, value, onApply, onOpenChange }) {
             </label>
             <input id={`${uid}-name`} value={d.name} placeholder="Part of the title" onChange={(e) => setD({ ...d, name: e.target.value })} className={field} />
           </div>
-          <div className="flex items-center justify-between border-t border-border px-6 py-4">
+          <div className="flex items-center justify-between border-t border-[#E6E6E6] px-7 pb-6 pt-4">
             <button type="button" onClick={() => setD(NO_FILTERS)} className="h-8 rounded-lg px-3 text-sm font-bold text-primary hover:bg-selected-bg">
               Reset
             </button>
-            <button type="submit" className="h-10 rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground hover:brightness-95">
+            <button type="submit" className="h-10 rounded bg-primary px-5 text-base font-medium text-primary-foreground hover:brightness-95">
               Apply filters
             </button>
           </div>
