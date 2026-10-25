@@ -17,6 +17,7 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { attendanceActions, getRegisters, TOTAL_CAMPAIGN_USERS, useAttendanceStore } from "@/lib/attendance-store";
 import { downloadRegisters } from "@/lib/templates";
+import { Loader, useOverlayLoader, usePageLoading } from "@/components/loader";
 
 const PAGE_SIZES = [10, 20, 50];
 const NO_FILTERS = { query: "", level: "", frequency: "", officer: "", status: "" };
@@ -87,6 +88,9 @@ export default function ManageRegisters() {
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [selected, setSelected] = useState(new Set());
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const loading = usePageLoading();
+  const withLoader = useOverlayLoader();
+  const download = (mode) => withLoader("Preparing your download…", () => downloadRegisters(selectedRegisters, mode), 1200);
 
   const filtersActive = Object.values(applied).some((v) => v.trim());
   // Clear and Search only do something once a filter has been entered (or one is still applied).
@@ -255,14 +259,14 @@ export default function ManageRegisters() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="min-w-64 bg-white p-0">
                     <DropdownMenuItem
-                      onSelect={() => void downloadRegisters(selectedRegisters, "single")}
+                      onSelect={() => void download("single")}
                       className="cursor-pointer flex-col items-start gap-0.5 rounded-none px-3 py-2.5 focus:bg-muted"
                     >
                       <span className="text-sm text-foreground">Download as a single Excel sheet</span>
                       <span className="text-xs text-muted-foreground">All {selected.size} registers in one sheet</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onSelect={() => void downloadRegisters(selectedRegisters, "individual")}
+                      onSelect={() => void download("individual")}
                       className="cursor-pointer flex-col items-start gap-0.5 rounded-none border-t border-border px-3 py-2.5 focus:bg-muted"
                     >
                       <span className="text-sm text-foreground">Download as individual registers</span>
@@ -273,7 +277,7 @@ export default function ManageRegisters() {
               ) : (
                 <button
                   disabled={selected.size === 0}
-                  onClick={() => void downloadRegisters(selectedRegisters, "single")}
+                  onClick={() => void download("single")}
                   className={`${outlineButton} ${disabledButton}`}
                 >
                   <Download className="size-4" /> Download
@@ -315,7 +319,14 @@ export default function ManageRegisters() {
                 </tr>
               </thead>
               <tbody>
-                {pageRows.length === 0 && (
+                {loading && (
+                  <tr>
+                    <td colSpan={8}>
+                      <Loader text="Loading registers…" />
+                    </td>
+                  </tr>
+                )}
+                {!loading && pageRows.length === 0 && (
                   <tr>
                     <td colSpan={8} className="px-4 py-10 text-center">
                       <p className="text-sm font-medium text-foreground">No registers match your filters.</p>
@@ -325,7 +336,7 @@ export default function ManageRegisters() {
                     </td>
                   </tr>
                 )}
-                {pageRows.map((r) => {
+                {!loading && pageRows.map((r) => {
                   const checked = selected.has(r.id);
                   return (
                     <tr key={r.id} className={`border-b border-border transition-colors last:border-0 ${checked ? "bg-selected-bg" : "hover:bg-muted/40"}`}>
@@ -425,9 +436,12 @@ export default function ManageRegisters() {
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
-                attendanceActions.deleteRegisters([...selected]);
-                setSelected(new Set());
+                const ids = [...selected];
                 setConfirmOpen(false);
+                void withLoader(`Deleting ${plural(ids.length, "register")}…`, () => {
+                  attendanceActions.deleteRegisters(ids);
+                  setSelected(new Set());
+                }, 1200);
               }}
               className="w-full rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:brightness-95"
             >

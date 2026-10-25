@@ -84,23 +84,23 @@ export function AppShell({ children }) {
         <NavRail />
         <div className={`flex min-w-0 flex-1 flex-col ${helpOpen ? "min-[1000px]:mr-[380px]" : ""}`}>
           <div className="flex items-center justify-end gap-4 border-b border-border bg-secondary px-6 py-2.5">
-            {!onHelpCenter && (
-              <button
-                ref={helpBtn}
-                onClick={() => (helpOpen ? closeHelp() : setHelpOpen(true))}
-                aria-expanded={helpOpen}
-                aria-controls="help-panel"
-                className="flex items-center gap-1.5 text-sm font-medium text-primary underline hover:no-underline"
-              >
-                <CircleHelp className="size-4.5" /> Help
-              </button>
-            )}
             <Link
               to="/attendance/audit-log"
               className="flex items-center gap-1.5 rounded-md border border-primary bg-white px-3 py-1.5 text-sm font-medium text-primary hover:bg-secondary/50"
             >
               <History className="size-4" /> Audit Log
             </Link>
+            {!onHelpCenter && (
+              <button
+                ref={helpBtn}
+                onClick={() => (helpOpen ? closeHelp() : setHelpOpen(true))}
+                aria-expanded={helpOpen}
+                aria-controls="help-panel"
+                className="flex items-center gap-1.5 rounded-md border border-primary bg-white px-3 py-1.5 text-sm font-medium text-primary hover:bg-secondary/50 aria-expanded:bg-primary/5"
+              >
+                <CircleHelp className="size-4" /> Help
+              </button>
+            )}
           </div>
           {children}
         </div>

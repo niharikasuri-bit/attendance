@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import { LoaderProvider } from "./components/loader";
 import "./styles.css";
 
 // After a rebuild, an open tab can ask for code files that no longer exist. Reload once to
@@ -17,7 +18,9 @@ window.addEventListener("load", () => setTimeout(() => sessionStorage.removeItem
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <App />
+      <LoaderProvider>
+        <App />
+      </LoaderProvider>
     </BrowserRouter>
   </StrictMode>,
 );

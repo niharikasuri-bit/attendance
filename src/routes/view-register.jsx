@@ -4,6 +4,7 @@ import { AppShell, Breadcrumb } from "@/components/app-shell";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { getRegisters, useAttendanceStore } from "@/lib/attendance-store";
 import { downloadSimpleSheet } from "@/lib/templates";
+import { Loader, useOverlayLoader, usePageLoading } from "@/components/loader";
 import emptyIllustration from "@/assets/empty-attendance-register.png";
 
 // Material icon paths used by this (Figma-matched) screen.
@@ -147,6 +148,8 @@ export default function ViewRegister() {
   const workers = useMemo(() => registerWorkers(registerId, store.users), [registerId, store.users]);
 
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const loading = usePageLoading();
+  const withLoader = useOverlayLoader();
   const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(0);
 
@@ -239,7 +242,7 @@ export default function ViewRegister() {
                     {downloads.map((d) => (
                       <DropdownMenuItem
                         key={d.label}
-                        onSelect={() => void d.run()}
+                        onSelect={() => void withLoader("Preparing your download…", d.run)}
                         className="cursor-pointer rounded-none px-2.5 py-4 text-base leading-6 text-[#0b0c0c] focus:bg-[#eee]"
                       >
                         {d.label}
@@ -261,7 +264,9 @@ export default function ViewRegister() {
               )}
             </div>
 
-            {workers.length === 0 ? (
+            {loading ? (
+              <Loader text="Loading users…" />
+            ) : workers.length === 0 ? (
               <div className="flex flex-col items-center rounded-xl border border-[#c5c5c5] bg-card px-6 py-10 text-center">
                 <img
                   src={emptyIllustration}

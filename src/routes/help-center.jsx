@@ -105,8 +105,8 @@ export default function HelpCenter() {
             Resources
           </h2>
           {/* Search and filters, then the type of resource with the count, then what's applied */}
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 min-w-0 flex-1 items-center gap-2.5 rounded-[10px] border border-[#C9D0D6] bg-white px-3.5 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
+          <div className="flex items-center justify-center gap-3">
+            <div className="flex h-12 min-w-0 max-w-[560px] flex-1 items-center gap-2.5 rounded-[10px] border border-[#C9D0D6] bg-white px-3.5 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
               <label htmlFor={`${uid}-q`} className="sr-only">
                 Search the Help Center
               </label>
@@ -130,8 +130,8 @@ export default function HelpCenter() {
             </button>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex max-w-full gap-0.5 overflow-x-auto rounded-full border border-[#DADCE0] bg-white p-1" role="group" aria-label="Type of resource">
+          <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-x-4 gap-y-2 max-sm:grid-cols-1">
+            <div className="col-start-2 flex max-w-full gap-0.5 max-sm:col-start-1 max-sm:justify-self-center overflow-x-auto rounded-full border border-[#DADCE0] bg-white p-1" role="group" aria-label="Type of resource">
               {RES.map((r) => {
                 const on = res === r.id;
                 return (
@@ -154,7 +154,7 @@ export default function HelpCenter() {
                 );
               })}
             </div>
-            <p className="text-sm text-[#5F6368]" role="status">
+            <p className="justify-self-start text-sm text-[#5F6368] max-sm:justify-self-center" role="status">
               {rows.length} {rows.length === 1 ? "resource" : "resources"}
             </p>
           </div>

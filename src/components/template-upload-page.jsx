@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ChevronLeft, CircleAlert, CircleCheck, Download, Eye, Loader2, RotateCcw, Upload, X } from "lucide-react";
 import { AppShell, Breadcrumb, FlowFooter } from "@/components/app-shell";
 import { NextStepNote, TemplatePreviewDialog } from "@/components/upload-instructions";
+import { useOverlayLoader } from "@/components/loader";
 import { backButtonClass } from "@/components/flow-controls";
 import { downloadFile, workbookFile } from "@/lib/templates";
 
@@ -64,6 +65,8 @@ export function TemplateUploadPage({
   const [preview, setPreview] = useState(null);
   // { status: "checking" | "ready" | "error", message }
   const [checkState, setCheckState] = useState(null);
+  const withLoader = useOverlayLoader();
+  const download = () => withLoader("Preparing your download…", downloadTemplate);
 
   const pickFile = (f) => {
     setFile(f);
@@ -101,7 +104,7 @@ export function TemplateUploadPage({
     setUploading(true);
     setError(null);
     try {
-      await finishUpload(file);
+      await withLoader(`Uploading ${file.name}…`, () => finishUpload(file), 1800);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload failed. Please try again.");
     } finally {
@@ -146,7 +149,7 @@ export function TemplateUploadPage({
               <div className="flex items-center gap-3">
                 {confirmFromPreview ? (
                   <>
-                    <button onClick={() => void downloadTemplate()} className={outlineHeaderButton}>
+                    <button onClick={() => void download()} className={outlineHeaderButton}>
                       <Download className="size-4" /> Download Generated Template
                     </button>
                     <button onClick={() => setPreview(buildTemplate())} className={solidHeaderButton}>
@@ -158,7 +161,7 @@ export function TemplateUploadPage({
                     <button onClick={() => setPreview(buildTemplate())} className={outlineHeaderButton}>
                       <Eye className="size-4" /> View Generated Template
                     </button>
-                    <button onClick={() => void downloadTemplate()} className={solidHeaderButton}>
+                    <button onClick={() => void download()} className={solidHeaderButton}>
                       <Download className="size-4" /> Download Generated Template
                     </button>
                   </>
@@ -328,7 +331,7 @@ export function TemplateUploadPage({
                   <button
                     onClick={() => {
                       setModalOpen(false);
-                      downloadTemplate();
+                      void download();
                     }}
                     className="flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:brightness-95"
                   >

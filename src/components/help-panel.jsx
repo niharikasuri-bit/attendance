@@ -5,14 +5,14 @@ import { DOCS, FAQS, TUTORIALS, topicLabel } from "@/lib/help-content";
 
 const TOPICS = FAQS;
 
-// Questions suggested for the page they're on; the rest sit under "More questions".
+// Questions suggested for the page they're on; search covers them all.
 const PAGE_TOPICS = [
   [/^\/attendance\/(customize|register-summary|upload)$/, ["register", "template", "session", "one-per-boundary"]],
-  [/^\/attendance\/(map-template|map-summary|upload-mapping)$/, ["mapping", "roles", "enrollment", "hidden"]],
+  [/^\/attendance\/(map-template|map-summary|upload-mapping)$/, ["mapping", "enrollment", "hidden"]],
   [/^\/attendance\/registers/, ["register", "active", "one-per-boundary", "enrollment"]],
   [/^\/attendance\/audit-log$/, ["register", "active", "mapping", "template"]],
 ];
-const DEFAULT_TOPICS = ["register", "template", "mapping", "roles"];
+const DEFAULT_TOPICS = ["register", "template", "mapping", "enrollment"];
 
 /** A small scene for the top of the panel: someone at a laptop with a question bubble. Decorative. */
 export function HelpArt({ className = "mb-1 h-auto w-32" }) {
@@ -157,7 +157,7 @@ function QuickLinks({ id, items, onGo }) {
 }
 
 /** Help, beside the page, only when asked: "How can we help you?" with search, questions suggested for the
- *  page they're on, quick links into the Help Center, and the rest below. Search covers every question, document
+ *  page they're on and quick links into the Help Center. Search covers every question, document
  *  and video. Escape closes it. */
 export function HelpPanel({ id, onClose }) {
   const { pathname } = useLocation();
@@ -185,7 +185,6 @@ export function HelpPanel({ id, onClose }) {
   const path = pathname.replace(/\/+$/, "") || "/";
   const suggestedIds = PAGE_TOPICS.find(([re]) => re.test(path))?.[1] ?? DEFAULT_TOPICS;
   const suggested = suggestedIds.map((s) => TOPICS.find((t) => t.id === s));
-  const more = TOPICS.filter((t) => !suggestedIds.includes(t.id));
   const hits = term ? TOPICS.filter((t) => `${t.q} ${t.a}`.toLowerCase().includes(term)) : [];
   // Searching covers everything: documents, videos and the quick links too, not just questions
   const docHits = term ? DOCS.filter((d) => `${d.title} ${d.desc} ${topicLabel(d.topic)}`.toLowerCase().includes(term)) : [];
@@ -286,12 +285,6 @@ export function HelpPanel({ id, onClose }) {
                 <QuestionList id={id} topics={suggested} openId={openId} onToggle={setOpenId} />
               </section>
               <QuickLinks id={id} items={QUICK} onGo={go} />
-              <section aria-labelledby={`${id}-m`}>
-                <h3 id={`${id}-m`} className={SECTION_HEADING}>
-                  More questions
-                </h3>
-                <QuestionList id={id} topics={more} openId={openId} onToggle={setOpenId} />
-              </section>
             </>
           )}
         </div>

@@ -5,6 +5,7 @@ import { AppShell, Breadcrumb, FlowFooter } from "@/components/app-shell";
 import { backButtonClass } from "@/components/flow-controls";
 import { FilterBar, FilterSelect } from "@/components/filters";
 import { getRegisters, useAttendanceStore } from "@/lib/attendance-store";
+import { Loader, usePageLoading } from "@/components/loader";
 
 const ACTIONS = ["Template Downloaded", "Register Generated", "Register Edited", "Register Deleted", "Users Mapped", "Register Downloaded"];
 
@@ -76,6 +77,7 @@ const COLUMNS = ["Register Name", "Action", "Details", "Role", "Date & Time"];
 
 export default function AuditLog() {
   const [action, setAction] = useState("");
+  const loading = usePageLoading();
   const [register, setRegister] = useState("");
   const store = useAttendanceStore();
   const registerIds = useMemo(() => new Map(getRegisters(store).map((r) => [r.name, r.id])), [store]);
@@ -125,14 +127,21 @@ export default function AuditLog() {
                   </tr>
                 </thead>
                 <tbody>
-                  {visible.length === 0 && (
+                  {loading && (
+                    <tr>
+                      <td colSpan={5}>
+                        <Loader text="Loading audit log…" />
+                      </td>
+                    </tr>
+                  )}
+                  {!loading && visible.length === 0 && (
                     <tr>
                       <td colSpan={5} className="px-4 py-8 text-center text-sm text-muted-foreground">
                         No audit log entries match the selected filters.
                       </td>
                     </tr>
                   )}
-                  {visible.map((e) => (
+                  {!loading && visible.map((e) => (
                     <tr key={e.id} className="border-b border-border transition-colors last:border-0 hover:bg-muted/40">
                       <td className="px-4 py-3 text-sm font-medium">
                         {registerIds.has(e.register) ? (

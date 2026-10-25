@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useOverlayLoader } from "@/components/loader";
 import { ChevronLeft, Lock } from "lucide-react";
 import { AppShell, Breadcrumb, FlowFooter } from "@/components/app-shell";
 import { COLUMN_TONES, SheetTable } from "@/components/upload-instructions";
@@ -16,6 +17,7 @@ const LEGEND = ["auto", "required", "optional"];
  */
 export function TemplateReview({ crumb, templateName, workbook, guide, groups, backTo, generateTo, prefilled = [] }) {
   const navigate = useNavigate();
+  const withLoader = useOverlayLoader();
   const sheets = workbook.sheets.filter((s) => !s.guide);
   const [active, setActive] = useState(0);
   const sheet = sheets[active];
@@ -103,7 +105,7 @@ export function TemplateReview({ crumb, templateName, workbook, guide, groups, b
         <Link to={backTo} className={backButtonClass}>
           <ChevronLeft className="size-4" /> Back
         </Link>
-        <button onClick={() => navigate(generateTo)} className={primaryButtonClass}>
+        <button onClick={() => void withLoader(`Generating your ${templateName.toLowerCase()}…`, null, 1800).then(() => navigate(generateTo))} className={primaryButtonClass}>
           Generate Template
         </button>
       </FlowFooter>

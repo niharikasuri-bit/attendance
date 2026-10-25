@@ -339,6 +339,8 @@ export async function uploadRegisterTemplate(file) {
         : { action: "Register Edited", register: r.name, details: `Updated from re-uploaded ${file.name}` };
     }),
   );
+  const created = results.filter((r) => r.created).length;
+  return { created, updated: results.length - created };
 }
 
 /* ---------- User mapping template ---------- */

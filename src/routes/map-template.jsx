@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Loader, usePageLoading } from "@/components/loader";
 import { ChevronLeft, Info, Search, X } from "lucide-react";
 import { AppShell, Breadcrumb, FlowFooter } from "@/components/app-shell";
 import { Checkbox, RadioCard, backButtonClass, primaryButtonClass } from "@/components/flow-controls";
@@ -196,6 +197,7 @@ export default function MapTemplate() {
   const hiddenCount = registers.length - selectable.length;
   const [noticeOpen, setNoticeOpen] = useState(true);
 
+  const loading = usePageLoading();
   const [step, setStep] = useState(() => Math.min(Math.max(Number(stepParam) || 0, 0), LAST_STEP));
   // Older saved choices used "Set per user" for the per-user option.
   const [enrollment, setEnrollment] = useState(() => (saved?.enrollment === "Set per user" ? PER_USER : saved?.enrollment ?? PER_USER));
@@ -226,7 +228,7 @@ export default function MapTemplate() {
               <>
                 <h2 className="text-2xl font-bold text-heading">Which registers do you want to map users to?</h2>
                 <p className="mt-1 text-sm text-muted-foreground">The template will be pre-filled with the Register IDs and boundaries of the registers you select.</p>
-                {hiddenCount > 0 && noticeOpen && (
+                {!loading && hiddenCount > 0 && noticeOpen && (
                   <div role="note" className="mt-4 flex items-start gap-2.5 rounded-md border border-info-foreground/20 bg-info px-4 py-3 text-sm">
                     <Info className="mt-0.5 size-4 shrink-0 text-info-foreground" aria-hidden="true" />
                     <div>
@@ -245,7 +247,11 @@ export default function MapTemplate() {
                     </button>
                   </div>
                 )}
-                <RegisterPicker registers={selectable} selected={selected} onChange={setSelected} newIds={newIds} />
+                {loading ? (
+                  <Loader text="Loading registers…" />
+                ) : (
+                  <RegisterPicker registers={selectable} selected={selected} onChange={setSelected} newIds={newIds} />
+                )}
               </>
             )}
 

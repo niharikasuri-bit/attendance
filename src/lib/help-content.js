@@ -42,12 +42,6 @@ export const FAQS = [
     a: "Adding people to a register so their attendance can be marked there, like writing the students' names on the attendance sheet before the first day. Each person is linked to one register through its Register ID.",
   },
   {
-    id: "roles",
-    topic: "mapping",
-    q: "Who are frontline workers, markers and approvers?",
-    a: "Frontline workers are the people whose attendance is recorded. Attendance markers record it, and attendance approvers check and approve it. Each group has its own sheet in the user mapping template.",
-  },
-  {
     id: "enrollment",
     topic: "mapping",
     q: "What is an enrollment date?",

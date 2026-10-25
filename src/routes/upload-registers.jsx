@@ -45,12 +45,14 @@ export default function UploadRegisters() {
       }}
       success={{
         cardClass: "mt-6 overflow-hidden rounded-2xl border border-border bg-card shadow-xl",
-        header: (
+        header: (result) => (
           <div className="bg-success px-8 py-16 text-center">
             <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-success-foreground/20">
               <CircleCheck className="size-7 text-success-foreground" strokeWidth={1.5} />
             </div>
-            <h2 className="mt-4 font-condensed text-3xl font-bold text-success-foreground">Attendance Registers Added Successfully!</h2>
+            <h2 className="mt-4 font-condensed text-3xl font-bold text-success-foreground">
+              {result ? `${plural(result.created + result.updated, "Attendance Register")} Added Successfully!` : "Attendance Registers Added Successfully!"}
+            </h2>
           </div>
         ),
         message: (

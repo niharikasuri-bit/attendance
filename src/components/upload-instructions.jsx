@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowDown, ArrowRight, Download, Eye, FilePenLine, Info, Loader2, Upload, ClipboardPen } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cellValue, columnLetter, downloadWorkbook, formatCell } from "@/lib/templates";
+import { useOverlayLoader } from "@/components/loader";
 
 const MIN_PREVIEW_ROWS = 12;
 
@@ -116,6 +117,7 @@ export function SheetTable({ sheet, toneFor, minRows = MIN_PREVIEW_ROWS }) {
 export function TemplatePreviewDialog({ workbook, title, onClose, onConfirm, summary = [], note = CHANGES_NOTE }) {
   const [active, setActive] = useState(0);
   const [confirming, setConfirming] = useState(false);
+  const withLoader = useOverlayLoader();
   // Instruction tabs stay in the downloaded file but aren't part of the register preview.
   const sheets = workbook ? workbook.sheets.filter((s) => !s.guide) : [];
   const [error, setError] = useState(null);
@@ -129,7 +131,7 @@ export function TemplatePreviewDialog({ workbook, title, onClose, onConfirm, sum
     setConfirming(true);
     setError(null);
     try {
-      await onConfirm(workbook);
+      await withLoader("Preparing your file for upload…", () => onConfirm(workbook), 1200);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload failed. Please try again.");
     } finally {
@@ -189,7 +191,7 @@ export function TemplatePreviewDialog({ workbook, title, onClose, onConfirm, sum
                 </p>
               )}
               <button
-                onClick={() => workbook && void downloadWorkbook(workbook)}
+                onClick={() => workbook && void withLoader("Preparing your download…", () => downloadWorkbook(workbook))}
                 className="flex items-center gap-2 rounded-md border border-primary bg-white px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/5"
               >
                 <Download className="size-4" /> Download Generated Template
@@ -206,7 +208,7 @@ export function TemplatePreviewDialog({ workbook, title, onClose, onConfirm, sum
           ) : (
             <div className="flex items-center gap-3">
               <button
-                onClick={() => workbook && void downloadWorkbook(workbook)}
+                onClick={() => workbook && void withLoader("Preparing your download…", () => downloadWorkbook(workbook))}
                 className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:brightness-95"
               >
                 <Download className="size-4" /> Download Generated Template
