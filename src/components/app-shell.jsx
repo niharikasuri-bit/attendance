@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { BookOpen, ChevronDown, CircleHelp, Copy, FileText, History, House, LayoutGrid, Search } from "lucide-react";
-import { HelpDialog } from "@/components/help-dialog";
+import { HelpPanel } from "@/components/help-panel";
 
 const RAIL_ICONS = [Search, House, Copy, LayoutGrid, FileText, BookOpen];
 
@@ -47,6 +47,16 @@ export function Breadcrumb({ items }) {
 
 export function AppShell({ children }) {
   const [helpOpen, setHelpOpen] = useState(false);
+  const helpBtn = useRef(null);
+  const closeHelp = () => {
+    setHelpOpen(false);
+    helpBtn.current?.focus();
+  };
+  // Lets the fixed flow footer stop at the panel's edge instead of running under it.
+  useEffect(() => {
+    document.documentElement.style.setProperty("--help-w", helpOpen ? "380px" : "0px");
+    return () => document.documentElement.style.removeProperty("--help-w");
+  }, [helpOpen]);
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans text-foreground">
       <div className="h-1 w-full bg-accent" />
@@ -70,11 +80,13 @@ export function AppShell({ children }) {
       </header>
       <div className="flex flex-1">
         <NavRail />
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className={`flex min-w-0 flex-1 flex-col ${helpOpen ? "min-[1000px]:mr-[380px]" : ""}`}>
           <div className="flex items-center justify-end gap-4 border-b border-border bg-secondary px-6 py-2.5">
             <button
-              onClick={() => setHelpOpen(true)}
-              aria-haspopup="dialog"
+              ref={helpBtn}
+              onClick={() => (helpOpen ? closeHelp() : setHelpOpen(true))}
+              aria-expanded={helpOpen}
+              aria-controls="help-panel"
               className="flex items-center gap-1.5 text-sm font-medium text-primary underline hover:no-underline"
             >
               <CircleHelp className="size-4.5" /> Help
@@ -88,8 +100,8 @@ export function AppShell({ children }) {
           </div>
           {children}
         </div>
+        {helpOpen && <HelpPanel id="help-panel" onClose={closeHelp} />}
       </div>
-      <HelpDialog open={helpOpen} onOpenChange={setHelpOpen} />
     </div>
   );
 }
@@ -97,7 +109,7 @@ export function AppShell({ children }) {
 /** Fixed bottom action bar used on every flow step. */
 export function FlowFooter({ children, className = "border-t border-border bg-card px-6 py-4" }) {
   return (
-    <footer className={`fixed bottom-0 left-11 right-0 z-30 ${className}`}>
+    <footer className={`fixed bottom-0 left-11 right-0 z-30 min-[1000px]:right-[var(--help-w,0px)] ${className}`}>
       <div className="flex w-full items-center justify-between">{children}</div>
     </footer>
   );
