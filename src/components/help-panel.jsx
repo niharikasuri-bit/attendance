@@ -1,58 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { ChevronDown, ChevronUp, Lightbulb, Search, X } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ChevronDown, ChevronRight, ChevronUp, CirclePlay, FileText, Lightbulb, MessageCircleQuestion, Search, X } from "lucide-react";
+import { DOCS, FAQS, TUTORIALS, topicLabel } from "@/lib/help-content";
 
-// Concepts people need to understand, phrased as the questions they actually ask.
-const TOPICS = [
-  {
-    id: "register",
-    q: "What is an attendance register?",
-    a: "A list of the people working in one boundary, such as a ward or a settlement. Each day, an attendance officer marks everyone on it Present or Absent.",
-    like: "a class attendance sheet: one sheet per classroom, one row per student.",
-  },
-  {
-    id: "template",
-    q: "What is a template, and why do I need one?",
-    a: "A template is an Excel file the system creates for you, already filled in with what it knows from your choices, like boundaries, Register IDs and dates. You check it, add anything missing, and upload it back. It lets you set up many registers or users at once instead of one by one.",
-    like: "a form that has been partly filled in for you.",
-  },
-  {
-    id: "mapping",
-    q: "What does mapping users mean?",
-    a: "Adding people to a register so their attendance can be marked there. Each person is linked to one register through its Register ID.",
-    like: "writing the students' names on the attendance sheet before the first day.",
-  },
-  {
-    id: "roles",
-    q: "Who are frontline workers, markers and approvers?",
-    a: "Frontline workers are the people whose attendance is recorded. Attendance markers record it, and attendance approvers check and approve it. Each group has its own sheet in the user mapping template.",
-  },
-  {
-    id: "enrollment",
-    q: "What is an enrollment date?",
-    a: "The day a person joins a register. Attendance can only be marked for them from that date onwards. A de-enrollment date is optional and is the day they leave.",
-  },
-  {
-    id: "session",
-    q: "What is a session?",
-    a: "One round of attendance in a day. “Once a day” means one session; “Twice a day” means two, for example morning and evening.",
-  },
-  {
-    id: "active",
-    q: "What's the difference between users and active users?",
-    a: "Users counts everyone ever mapped to a register. Active users are the people currently on it, so anyone who has been de-enrolled is left out.",
-  },
-  {
-    id: "hidden",
-    q: "Why can't I see some registers when mapping users?",
-    a: "Registers that already have enrollment dates set can't be selected again, so they are hidden from that list.",
-  },
-  {
-    id: "one-per-boundary",
-    q: "Why can't I create a register for boundaries that already have one?",
-    a: "Each set of boundaries can only have one register. To change it, edit the existing register, or delete it in Manage Registers and create a new one.",
-  },
-];
+const TOPICS = FAQS;
 
 // Questions suggested for the page they're on; the rest sit under "More questions".
 const PAGE_TOPICS = [
@@ -64,9 +15,9 @@ const PAGE_TOPICS = [
 const DEFAULT_TOPICS = ["register", "template", "mapping", "roles"];
 
 /** A small scene for the top of the panel: someone at a laptop with a question bubble. Decorative. */
-function HelpArt() {
+export function HelpArt({ className = "mb-1 h-auto w-32" }) {
   return (
-    <svg className="mb-1 h-auto w-32" viewBox="0 0 220 140" aria-hidden="true" focusable="false">
+    <svg className={className} viewBox="0 0 220 140" aria-hidden="true" focusable="false">
       <ellipse cx="112" cy="128" rx="92" ry="8" fill="var(--primary)" fillOpacity="0.12" />
       <circle cx="58" cy="44" r="30" fill="var(--primary)" fillOpacity="0.1" />
       <circle cx="176" cy="82" r="22" fill="var(--primary)" fillOpacity="0.08" />
@@ -143,12 +94,86 @@ function QuestionList({ id, topics, openId, onToggle }) {
   );
 }
 
+// Quick links into the Help Center, one per type of resource.
+const QUICK = [
+  { key: "documents", label: "Documents", hint: "Reference and downloads", icon: FileText, tone: "bg-[#E8F0FE] text-[#1D70B8]" },
+  { key: "videos", label: "Tutorials", hint: "Step-by-step guides and videos", icon: CirclePlay, tone: "bg-[#FDECEC] text-[#B42318]" },
+  { key: "faq", label: "FAQs", hint: "Common questions", icon: MessageCircleQuestion, tone: "bg-[#E7F4EC] text-[#00703C]" },
+];
+
+/** A document or video found by search, which opens it in the Help Center. */
+function ResourceList({ items, onGo }) {
+  return (
+    <ul className="rounded-xl border border-[#E6EAEE] bg-white px-1 py-0.5 shadow-[0_1px_2px_rgb(16_24_40/0.04)]">
+      {items.map((x) => (
+        <li key={x.id} className="border-t border-[#F1F1F1] first:border-0">
+          <button
+            type="button"
+            onClick={onGo}
+            className="group flex w-full items-center gap-3 rounded-lg px-2 py-[11px] text-left text-[0.9375rem] text-foreground hover:bg-[#F5F8FB] hover:text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {x.format ? (
+              <span
+                aria-hidden="true"
+                className={`grid h-[26px] w-[22px] shrink-0 place-items-end justify-center rounded-[3px_7px_3px_3px] pb-0.5 text-[0.4375rem] font-extrabold text-white ${x.format === "PDF" ? "bg-[#D93025]" : "bg-[#188038]"}`}
+              >
+                {x.format}
+              </span>
+            ) : (
+              <span aria-hidden="true" className="grid size-[22px] shrink-0 place-items-center rounded-full bg-[linear-gradient(135deg,#1A73E8,#0B4B66)] text-white">
+                <CirclePlay className="size-3.5" />
+              </span>
+            )}
+            <span className="min-w-0 flex-1">
+              {x.title}
+              <span className="block text-xs text-muted-foreground">{x.length ? `${x.length} · ${topicLabel(x.topic)}` : topicLabel(x.topic)}</span>
+            </span>
+            <ChevronRight className="size-[18px] shrink-0 text-[#B0B6BC] group-hover:text-primary" aria-hidden="true" />
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 const SECTION_HEADING = "mb-2.5 text-xs font-bold uppercase tracking-[0.05em] text-[#5F6B76]";
 
+function QuickLinks({ id, items, onGo }) {
+  return (
+    <section aria-labelledby={`${id}-k`}>
+      <h3 id={`${id}-k`} className={SECTION_HEADING}>
+        Quick links
+      </h3>
+      <ul className="grid grid-cols-3 gap-2">
+        {items.map((x) => (
+          <li key={x.key}>
+            <button
+              type="button"
+              onClick={() => onGo(x.key)}
+              className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-xl border border-[#E6EAEE] bg-white px-2 py-3.5 text-center text-sm font-bold leading-tight text-heading shadow-[0_1px_2px_rgb(16_24_40/0.04)] transition-shadow hover:border-primary/45 hover:shadow-[0_4px_12px_rgb(16_24_40/0.07)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <span aria-hidden="true" className={`grid size-10 place-items-center rounded-xl ${x.tone}`}>
+                <x.icon className="size-5" />
+              </span>
+              {x.label}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 /** Help, beside the page, only when asked: "How can we help you?" with search, questions suggested for the
- *  page they're on, and the rest below. Search covers every question and answer. Escape closes it. */
+ *  page they're on, quick links into the Help Center, and the rest below. Search covers every question, document
+ *  and video. Escape closes it. */
 export function HelpPanel({ id, onClose }) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const go = (type) => {
+    onClose();
+    navigate(`/attendance/help${type ? `?type=${type}` : ""}`);
+  };
   const titleRef = useRef(null);
   const panelRef = useRef(null);
   useEffect(() => titleRef.current?.focus(), []);
@@ -170,6 +195,11 @@ export function HelpPanel({ id, onClose }) {
   const suggested = suggestedIds.map((s) => TOPICS.find((t) => t.id === s));
   const more = TOPICS.filter((t) => !suggestedIds.includes(t.id));
   const hits = term ? TOPICS.filter((t) => `${t.q} ${t.a} ${t.like ?? ""}`.toLowerCase().includes(term)) : [];
+  // Searching covers everything: documents, videos and the quick links too, not just questions
+  const docHits = term ? DOCS.filter((d) => `${d.title} ${d.desc} ${topicLabel(d.topic)}`.toLowerCase().includes(term)) : [];
+  const vidHits = term ? TUTORIALS.filter((t) => `${t.title} ${t.desc} ${topicLabel(t.topic)}`.toLowerCase().includes(term)) : [];
+  const quickShown = QUICK.filter((x) => !term || `${x.label} ${x.hint}`.toLowerCase().includes(term));
+  const count = hits.length + docHits.length + vidHits.length + (term ? quickShown.length : 0);
 
   return (
     <aside
@@ -198,7 +228,7 @@ export function HelpPanel({ id, onClose }) {
           <h2 id={`${id}-title`} ref={titleRef} tabIndex={-1} className="text-xl font-bold text-heading outline-none">
             How can we help you?
           </h2>
-          <p className="mb-3.5 mt-0.5 text-sm text-muted-foreground">Quick answers to common questions about attendance registers.</p>
+          <p className="mb-3.5 mt-0.5 text-sm text-muted-foreground">Find documents, short how-to videos and answers to common questions about attendance registers.</p>
           <div className="flex h-11 w-full items-center gap-2 rounded-lg border border-input bg-white px-3.5 shadow-[0_2px_8px_rgb(16_24_40/0.06)] focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
             <label htmlFor={`${id}-q`} className="sr-only">
               Search help
@@ -215,28 +245,47 @@ export function HelpPanel({ id, onClose }) {
           </div>
         </div>
         <p className="sr-only" role="status">
-          {term ? `${hits.length} ${hits.length === 1 ? "result" : "results"}` : ""}
+          {term ? `${count} ${count === 1 ? "result" : "results"}` : ""}
         </p>
 
         <div className="flex flex-col gap-[22px] p-5">
           {term ? (
-            hits.length ? (
-              <section aria-labelledby={`${id}-r`}>
-                <h3 id={`${id}-r`} className={SECTION_HEADING}>
-                  Questions
-                </h3>
-                <QuestionList id={id} topics={hits} openId={openId} onToggle={setOpenId} />
-              </section>
-            ) : (
-              <div className="rounded-xl border border-dashed border-[#D6D6D6] bg-white p-5 text-center text-[0.9375rem] text-muted-foreground">
-                <p className="mb-1">
-                  <strong className="text-foreground">No results for “{q.trim()}”</strong>
-                </p>
-                <p>Try other words, or look through the questions below.</p>
-              </div>
-            )
-          ) : null}
-          {(!term || !hits.length) && (
+            <>
+              {hits.length > 0 && (
+                <section aria-labelledby={`${id}-r`}>
+                  <h3 id={`${id}-r`} className={SECTION_HEADING}>
+                    Questions
+                  </h3>
+                  <QuestionList id={id} topics={hits} openId={openId} onToggle={setOpenId} />
+                </section>
+              )}
+              {docHits.length > 0 && (
+                <section aria-labelledby={`${id}-d`}>
+                  <h3 id={`${id}-d`} className={SECTION_HEADING}>
+                    Documents
+                  </h3>
+                  <ResourceList items={docHits} onGo={() => go("documents")} />
+                </section>
+              )}
+              {vidHits.length > 0 && (
+                <section aria-labelledby={`${id}-v`}>
+                  <h3 id={`${id}-v`} className={SECTION_HEADING}>
+                    Videos
+                  </h3>
+                  <ResourceList items={vidHits} onGo={() => go("videos")} />
+                </section>
+              )}
+              {quickShown.length > 0 && <QuickLinks id={id} items={quickShown} onGo={go} />}
+              {!count && (
+                <div className="rounded-xl border border-dashed border-[#D6D6D6] bg-white p-5 text-center text-[0.9375rem] text-muted-foreground">
+                  <p className="mb-1">
+                    <strong className="text-foreground">No results for “{q.trim()}”</strong>
+                  </p>
+                  <p>Try other words, or look through the FAQs.</p>
+                </div>
+              )}
+            </>
+          ) : (
             <>
               <section aria-labelledby={`${id}-a`}>
                 <h3 id={`${id}-a`} className={SECTION_HEADING}>
@@ -244,6 +293,7 @@ export function HelpPanel({ id, onClose }) {
                 </h3>
                 <QuestionList id={id} topics={suggested} openId={openId} onToggle={setOpenId} />
               </section>
+              <QuickLinks id={id} items={QUICK} onGo={go} />
               <section aria-labelledby={`${id}-m`}>
                 <h3 id={`${id}-m`} className={SECTION_HEADING}>
                   More questions

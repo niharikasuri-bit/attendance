@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { BookOpen, ChevronDown, CircleHelp, Copy, FileText, History, House, LayoutGrid, Search } from "lucide-react";
 import { HelpPanel } from "@/components/help-panel";
 
@@ -47,6 +47,8 @@ export function Breadcrumb({ items }) {
 
 export function AppShell({ children }) {
   const [helpOpen, setHelpOpen] = useState(false);
+  // No Help button on the Help Center itself
+  const onHelpCenter = useLocation().pathname.replace(/\/+$/, "") === "/attendance/help";
   const helpBtn = useRef(null);
   const closeHelp = () => {
     setHelpOpen(false);
@@ -82,15 +84,17 @@ export function AppShell({ children }) {
         <NavRail />
         <div className={`flex min-w-0 flex-1 flex-col ${helpOpen ? "min-[1000px]:mr-[380px]" : ""}`}>
           <div className="flex items-center justify-end gap-4 border-b border-border bg-secondary px-6 py-2.5">
-            <button
-              ref={helpBtn}
-              onClick={() => (helpOpen ? closeHelp() : setHelpOpen(true))}
-              aria-expanded={helpOpen}
-              aria-controls="help-panel"
-              className="flex items-center gap-1.5 text-sm font-medium text-primary underline hover:no-underline"
-            >
-              <CircleHelp className="size-4.5" /> Help
-            </button>
+            {!onHelpCenter && (
+              <button
+                ref={helpBtn}
+                onClick={() => (helpOpen ? closeHelp() : setHelpOpen(true))}
+                aria-expanded={helpOpen}
+                aria-controls="help-panel"
+                className="flex items-center gap-1.5 text-sm font-medium text-primary underline hover:no-underline"
+              >
+                <CircleHelp className="size-4.5" /> Help
+              </button>
+            )}
             <Link
               to="/attendance/audit-log"
               className="flex items-center gap-1.5 rounded-md border border-primary bg-white px-3 py-1.5 text-sm font-medium text-primary hover:bg-secondary/50"

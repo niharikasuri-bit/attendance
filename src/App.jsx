@@ -11,6 +11,7 @@ import UploadMapping from "./routes/upload-mapping";
 import ManageRegisters from "./routes/manage-registers";
 import ViewRegister from "./routes/view-register";
 import AuditLog from "./routes/audit-log";
+import HelpCenter from "./routes/help-center";
 
 const TITLES = {
   "/": "Campaign Setup",
@@ -23,6 +24,7 @@ const TITLES = {
   "/attendance/upload-mapping": "Upload Populated User Mapping Template",
   "/attendance/registers": "Manage Registers",
   "/attendance/audit-log": "Attendance Audit Log",
+  "/attendance/help": "Help Center",
 };
 
 function useDocumentTitle() {
@@ -78,6 +80,7 @@ export default function App() {
       <Route path="/attendance/registers" element={<ManageRegisters />} />
       <Route path="/attendance/registers/:registerId" element={<ViewRegister />} />
       <Route path="/attendance/audit-log" element={<AuditLog />} />
+      <Route path="/attendance/help" element={<HelpCenter />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
