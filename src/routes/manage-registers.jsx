@@ -160,7 +160,7 @@ export default function ManageRegisters() {
             <p className="mt-1 text-sm text-muted-foreground">All the attendance registers you've generated for this campaign are here. Find a register, open it to see its users and attendance, or download and delete registers.</p>
           </div>
           <div className="flex shrink-0 items-center gap-3">
-            <Link to="/attendance/map-template" className={outlineButton}>
+            <Link to={selected.size ? `/attendance/map-template?registers=${[...selected].join(",")}` : "/attendance/map-template"} className={outlineButton}>
               <Users className="size-4" /> Map Users to Registers
             </Link>
             <Link to="/attendance/customize" className={primaryButton}>
