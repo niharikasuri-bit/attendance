@@ -205,16 +205,17 @@ export function HelpPanel({ id, onClose }) {
       }}
       className="fixed bottom-0 right-0 top-[60px] z-40 flex w-[380px] max-w-full animate-in slide-in-from-right-6 fade-in flex-col border-l border-border bg-[#F6F8FA] shadow-[-16px_0_40px_rgb(0_0_0/0.18)] min-[1000px]:shadow-[-12px_0_32px_rgb(0_0_0/0.06)] motion-reduce:animate-none"
     >
+      {/* Outside the scroll area, so it stays in place while the panel scrolls */}
+      <button
+        type="button"
+        aria-label="Close help"
+        onClick={onClose}
+        className="absolute right-3.5 top-3.5 z-10 grid size-9 place-items-center rounded-full bg-white text-foreground shadow-[0_1px_2px_rgb(0_0_0/0.12)] hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <X className="size-5" />
+      </button>
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
         <div className="relative flex shrink-0 flex-col items-center bg-[linear-gradient(180deg,#E1ECF8_0%,#ECF2F9_55%,#F6F8FA_100%)] px-5 pb-5 pt-4 text-center">
-          <button
-            type="button"
-            aria-label="Close help"
-            onClick={onClose}
-            className="absolute right-3.5 top-3.5 grid size-9 place-items-center rounded-full bg-white text-foreground shadow-[0_1px_2px_rgb(0_0_0/0.12)] hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <X className="size-5" />
-          </button>
           <HelpArt />
           <h2 id={`${id}-title`} ref={titleRef} tabIndex={-1} className="text-xl font-bold text-heading outline-none">
             How can we help you?
