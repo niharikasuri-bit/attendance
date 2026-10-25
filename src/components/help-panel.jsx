@@ -15,7 +15,7 @@ const PAGE_TOPICS = [
 const DEFAULT_TOPICS = ["register", "template", "mapping", "enrollment"];
 
 /** A small scene for the top of the panel: someone at a laptop with a question bubble. Decorative. */
-export function HelpArt({ className = "mb-1 h-auto w-32" }) {
+export function HelpArt({ className = "mb-1 h-auto w-44" }) {
   return (
     <svg className={className} viewBox="0 0 220 140" aria-hidden="true" focusable="false">
       <ellipse cx="112" cy="128" rx="92" ry="8" fill="var(--primary)" fillOpacity="0.12" />
@@ -219,7 +219,7 @@ export function HelpPanel({ id, onClose }) {
           <h2 id={`${id}-title`} ref={titleRef} tabIndex={-1} className="text-xl font-bold text-heading outline-none">
             How can we help you?
           </h2>
-          <p className="mb-3.5 mt-0.5 text-sm text-muted-foreground">Find documents, short how-to videos and answers to common questions about attendance registers.</p>
+          <p className="mb-3.5 mt-0.5 text-sm text-muted-foreground">Find documents, short how-to videos and answers to common questions.</p>
           <div className="flex h-11 w-full items-center gap-2 rounded-lg border border-input bg-white px-3.5 shadow-[0_2px_8px_rgb(16_24_40/0.06)] focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
             <label htmlFor={`${id}-q`} className="sr-only">
               Search help
