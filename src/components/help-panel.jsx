@@ -167,6 +167,15 @@ export function HelpPanel({ id, onClose }) {
     navigate(`/attendance/help${type ? `?type=${type}` : ""}`);
   };
   const titleRef = useRef(null);
+  const scrollRef = useRef(null);
+  const sentinelRef = useRef(null);
+  // The search sticks to the top once the header scrolls away; then it makes room for the close button.
+  const [stuck, setStuck] = useState(false);
+  useEffect(() => {
+    const io = new IntersectionObserver(([e]) => setStuck(!e.isIntersecting), { root: scrollRef.current });
+    io.observe(sentinelRef.current);
+    return () => io.disconnect();
+  }, []);
   const panelRef = useRef(null);
   useEffect(() => titleRef.current?.focus(), []);
   // Sit under the header, and slide up to the top of the window once the header scrolls away.
@@ -214,13 +223,16 @@ export function HelpPanel({ id, onClose }) {
       >
         <X className="size-5" />
       </button>
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto [scrollbar-color:#C4C9CE_transparent] [scrollbar-width:thin]">
-        <div className="relative flex shrink-0 flex-col items-center bg-[linear-gradient(180deg,#E1ECF8_0%,#ECF2F9_55%,#F6F8FA_100%)] px-5 pb-5 pt-4 text-center">
+      <div ref={scrollRef} className="flex min-h-0 flex-1 flex-col overflow-y-auto [scrollbar-color:#C4C9CE_transparent] [scrollbar-width:thin]">
+        <div className="relative flex shrink-0 flex-col items-center bg-[linear-gradient(180deg,#E1ECF8_0%,#ECF2F9_55%,#F6F8FA_100%)] px-5 pb-1 pt-4 text-center">
           <HelpArt />
           <h2 id={`${id}-title`} ref={titleRef} tabIndex={-1} className="text-xl font-bold text-heading outline-none">
             How can we help you?
           </h2>
-          <p className="mb-3.5 mt-0.5 text-sm text-muted-foreground">Find documents, short how-to videos and answers to common questions.</p>
+          <p className="mt-0.5 text-sm text-muted-foreground">Find documents, short how-to videos and answers to common questions.</p>
+        </div>
+        <div ref={sentinelRef} aria-hidden="true" />
+        <div className={`sticky top-0 z-[5] bg-[#F6F8FA] px-5 pb-3 pt-2.5 ${stuck ? "pr-[60px] shadow-[0_1px_0_#E6EAEE]" : ""}`}>
           <div className="flex h-11 w-full items-center gap-2 rounded-lg border border-input bg-white px-3.5 shadow-[0_2px_8px_rgb(16_24_40/0.06)] focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
             <label htmlFor={`${id}-q`} className="sr-only">
               Search help
@@ -229,7 +241,7 @@ export function HelpPanel({ id, onClose }) {
             <input
               id={`${id}-q`}
               type="search"
-              placeholder="Search help"
+              placeholder="Search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               className="min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground"
