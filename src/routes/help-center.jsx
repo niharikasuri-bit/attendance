@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ChevronDown, ChevronUp, CirclePlay, FileText, LayoutGrid, MessageCircleQuestion, Search, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, ChevronUp, CirclePlay, FileText, Info, LayoutGrid, MessageCircleQuestion, Search, SlidersHorizontal, X } from "lucide-react";
 import { AppShell, Breadcrumb } from "@/components/app-shell";
 import { HelpArt } from "@/components/help-panel";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -154,7 +154,9 @@ export default function HelpCenter() {
                 );
               })}
             </div>
-            <p className="text-sm text-[#5F6368]" role="status">
+            {/* DIGIT info tag */}
+            <p className="inline-flex items-center gap-1 rounded bg-[#DEEFFF] px-3 py-1 text-sm text-[#0057BD]" role="status">
+              <Info className="size-4" aria-hidden="true" />
               {rows.length} {rows.length === 1 ? "resource" : "resources"}
             </p>
           </div>
