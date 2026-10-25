@@ -170,7 +170,8 @@ export function TemplateUploadPage({
             )}
           </div>
 
-          {!done && <NextStepNote resultHint={resultHint} fill={!confirmFromPreview} />}
+          {/* The steps guide getting a file in; once one is added they are no longer needed */}
+          {!done && !file && <NextStepNote resultHint={resultHint} fill={!confirmFromPreview} />}
 
           {done ? (
             <div className={success.cardClass}>
