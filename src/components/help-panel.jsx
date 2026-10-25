@@ -214,7 +214,7 @@ export function HelpPanel({ id, onClose }) {
       >
         <X className="size-5" />
       </button>
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto [scrollbar-color:#C4C9CE_transparent] [scrollbar-width:thin]">
         <div className="relative flex shrink-0 flex-col items-center bg-[linear-gradient(180deg,#E1ECF8_0%,#ECF2F9_55%,#F6F8FA_100%)] px-5 pb-5 pt-4 text-center">
           <HelpArt />
           <h2 id={`${id}-title`} ref={titleRef} tabIndex={-1} className="text-xl font-bold text-heading outline-none">
