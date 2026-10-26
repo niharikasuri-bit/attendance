@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CircleHelp, ClipboardList, CloudUpload, Fingerprint, ListChecks, MapPinned, PackagePlus, Pencil } from "lucide-react";
+import { ClipboardList, CloudUpload, Fingerprint, ListChecks, MapPinned, PackagePlus, Pencil } from "lucide-react";
 import { AppShell, Breadcrumb } from "@/components/app-shell";
 
 const DELIVERY_COPY =
@@ -38,9 +38,6 @@ export default function CampaignSetup() {
         <div className="mx-auto max-w-5xl">
           <div className="flex items-center justify-between text-xs">
             <Breadcrumb items={[{ label: "Home", to: "/" }, { label: "Module selection" }]} />
-            <button className="flex items-center gap-1 text-primary hover:underline">
-              Help <CircleHelp className="size-3.5" />
-            </button>
           </div>
 
           <div className="mt-4 flex flex-wrap items-start justify-between gap-3">
